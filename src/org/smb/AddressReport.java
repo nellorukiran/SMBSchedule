@@ -4,14 +4,12 @@ public class AddressReport {
 
 	public static void main(String[] args) {
 
-		try{				
-			CustomerDownloadBizlogic.userDownloadDeatils("Address");			
-		}catch(Exception e){
+		try {
+			CustomerDownloadBizlogic.userDownloadDeatils("Address");
+		} catch (Exception e) {
 			e.printStackTrace();
-			System.out.println("Exception ####"+e);
+			System.out.println("Exception While Report Generation in CusmerIdReport ####" + e);
 		}
-		
-
 	}
 
 }

@@ -4,14 +4,12 @@ public class CusmerIdReport {
 
 	public static void main(String[] args) {
 
-		try{				
-			CustomerDownloadBizlogic.userDownloadDeatils("CustomerId");			
-		}catch(Exception e){
+		try {
+			CustomerDownloadBizlogic.userDownloadDeatils("CustomerId");
+		} catch (Exception e) {
 			e.printStackTrace();
-			System.out.println("Exception ####"+e);
+			System.out.println("Exception While Report Generation in CusmerIdReport ####" + e);
 		}
-		
-
 	}
 
 }
