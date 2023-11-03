@@ -19,7 +19,6 @@ public class CustomerDownloadBizlogic {
 	public static String userDownloadDeatils(String inputVal) {
 		System.out.println("Downloading the User Details by " + inputVal);
 		Connection con = null;
-		Connection awsCon = null;
 		PreparedStatement paymentDetailsQury = null;
 		ResultSet rs = null;
 		// PreparedStatement maxdueAmtQury = null ,maxPerDueAmtQury = null
@@ -35,45 +34,17 @@ public class CustomerDownloadBizlogic {
 		dateString = formatedDate.replace(":", "-");
 		if (inputVal.length() > 0) {
 			try {
-				awsCon = DBConnection.getAWSDBConnection();
-				if (awsCon != null) {
-					if ("CustomerId".equals(inputVal)) {
-						paymentDetailsQury = awsCon
-								.prepareStatement(CommonConstents.PAYMENT_DETAILS_DOWNLOAD_QUERY_CUSID);
-					}
-					if ("Address".equals(inputVal)) {
-						paymentDetailsQury = awsCon
-								.prepareStatement(CommonConstents.PAYMENT_DETAILS_DOWNLOAD_QUERY_ADDRESS);
-					}
-					rs = paymentDetailsQury.executeQuery();
-
-				} else {
-					con = DBConnection.getDBConnection();
-					if ("CustomerId".equals(inputVal)) {
-						paymentDetailsQury = con.prepareStatement(CommonConstents.PAYMENT_DETAILS_DOWNLOAD_QUERY_CUSID);
-					}
-					if ("Address".equals(inputVal)) {
-						paymentDetailsQury = con
-								.prepareStatement(CommonConstents.PAYMENT_DETAILS_DOWNLOAD_QUERY_ADDRESS);
-					}
-					rs = paymentDetailsQury.executeQuery();
-
+				con = DBConnection.getDBConnection();
+				if ("CustomerId".equals(inputVal)) {
+					paymentDetailsQury = con.prepareStatement(CommonConstents.PAYMENT_DETAILS_DOWNLOAD_QUERY_CUSID);
 				}
+				if ("Address".equals(inputVal)) {
+					paymentDetailsQury = con.prepareStatement(CommonConstents.PAYMENT_DETAILS_DOWNLOAD_QUERY_ADDRESS);
+				}
+				rs = paymentDetailsQury.executeQuery();
+				
 			} catch (Exception e) {
-				System.out.println("Exception while AWS DB Connect / Operation #####-1" + e);
-				try {
-					con = DBConnection.getDBConnection();
-					if ("CustomerId".equals(inputVal)) {
-						paymentDetailsQury = con.prepareStatement(CommonConstents.PAYMENT_DETAILS_DOWNLOAD_QUERY_CUSID);
-					}
-					if ("Address".equals(inputVal)) {
-						paymentDetailsQury = con
-								.prepareStatement(CommonConstents.PAYMENT_DETAILS_DOWNLOAD_QUERY_ADDRESS);
-					}
-					rs = paymentDetailsQury.executeQuery();
-				} catch (Exception e1) {
-					System.out.println("Exception while DB Connect / Operation #####-2" + e);
-				}
+				System.out.println("Exception while DB Connect / Operation #####-1" + e);
 				displayMsg = "notdownloaded";
 			}
 			try {
@@ -130,8 +101,6 @@ public class CustomerDownloadBizlogic {
 				paymentDetailsQury.close();
 				if (con != null)
 					con.close();
-				if (awsCon != null)
-					awsCon.close();
 				fileOut.close();
 				displayMsg = "downloaded";
 
@@ -140,6 +109,11 @@ public class CustomerDownloadBizlogic {
 			} catch (Exception e) {
 				displayMsg = "notdownloaded";
 				System.out.println("Exception While Report Generation in CustomerDownloadBizlogic ####" + e);
+			}finally {
+				try {
+					paymentDetailsQury.close();
+					con.close();
+				}catch (Exception e) {}
 			}
 		}
 		return displayMsg;
